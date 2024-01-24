@@ -6,6 +6,11 @@ import com.amadeus.flightsearchengine.model.FlightModel;
 import com.amadeus.flightsearchengine.par.FlightPar;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.function.Function;
+
 @Repository
 public class FlightDaoImpl extends EntityDAO<FlightModel, FlightPar, String> implements FlightDao
 {
@@ -40,5 +45,33 @@ public class FlightDaoImpl extends EntityDAO<FlightModel, FlightPar, String> imp
     protected Class<FlightPar> getParClass()
     {
         return FlightPar.class;
+    }
+
+    @Override
+    public List<FlightModel> find(FlightModel aInFlightModel)
+    {
+        LocalDateTime lWantedDay =  aInFlightModel.getDepartureDateTime().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime lNextDay = lWantedDay.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+
+        Function<FlightPar, Boolean> lFunction = flight -> {
+            if(!flight.getDepartureAirport().equals(aInFlightModel.getDepartureAirport()))
+            {
+                return  false;
+            }
+            if(!flight.getArrivalAirport().equals(aInFlightModel.getArrivalAirport()))
+            {
+                return  false;
+            }
+            if(flight.getDepartureDateTime().isBefore(lWantedDay))
+            {
+                return  false;
+            }
+            if (flight.getDepartureDateTime().isAfter(lNextDay))
+            {
+                return false;
+            }
+            return true;
+        };
+        return find(lFunction);
     }
 }

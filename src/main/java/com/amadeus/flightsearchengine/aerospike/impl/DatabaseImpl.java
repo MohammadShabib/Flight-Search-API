@@ -6,6 +6,10 @@ import com.amadeus.flightsearchengine.par.AirportPar;
 import com.amadeus.flightsearchengine.aerospike.DatabaseIf;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 @Service
 public class DatabaseImpl implements DatabaseIf
 {
@@ -21,6 +25,13 @@ public class DatabaseImpl implements DatabaseIf
     {
         aeroMapper.save(aInObject);
         return aInObject;
+    }
+
+    @Override
+    public <T> List<T> persist(List<T> aInObjects)
+    {
+        aInObjects.forEach(this::persist);
+        return aInObjects;
     }
 
     @Override
@@ -40,5 +51,21 @@ public class DatabaseImpl implements DatabaseIf
     public <T> boolean delete(Class<T> aInClass, Object aInId)
     {
         return aeroMapper.delete(AirportPar.class, aInId);
+    }
+
+
+    @Override
+    public <T> List<T> find(Class<T> aInClass, Function<T, Boolean> aInFunction)
+    {
+        List<T> lOutResult = new ArrayList<T>();
+        Function<T, Boolean> lFunction = a -> {
+            if (aInFunction.apply(a))
+            {
+                lOutResult.add(a);
+            }
+            return true;
+        };
+        aeroMapper.find(aInClass, lFunction);
+        return lOutResult;
     }
 }

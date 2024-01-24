@@ -1,5 +1,8 @@
 package com.amadeus.flightsearchengine.aerospike;
 
+import java.util.List;
+import java.util.function.Function;
+
 public interface DatabaseIf
 {
     /**
@@ -11,6 +14,15 @@ public interface DatabaseIf
      * in-place
      */
     <T> T persist(T aInObject);
+
+    /**
+     * Performs a batch persist on a list of DB entities of the same type.<br/>
+     *
+     * @param aInObjects            the objects to persist
+     * @param <T>                   should be a database type (Par)
+     * @return the IDs of the failed records
+     */
+    <T> List<T> persist(List<T> aInObjects);
 
     /**
      * Puts an object in the DB; equivalent to a persist call if the object
@@ -42,4 +54,6 @@ public interface DatabaseIf
      * @return true if the record existed, false if not
      */
     <T> boolean delete(Class<T> aInClass, Object aInId);
+
+    <T> List<T> find(Class<T> aInClass, Function<T, Boolean> aInFunction);
 }

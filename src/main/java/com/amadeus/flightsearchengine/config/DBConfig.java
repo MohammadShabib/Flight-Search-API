@@ -32,6 +32,7 @@ public class DBConfig
     @Bean()
     public AeroMapper model(AerospikeClient aInAerospikeClient) throws AerospikeException
     {
-        return new Builder(aInAerospikeClient).build();
+        AeroMapper lOutAeroMapper = new Builder(aInAerospikeClient).build();
+        return lOutAeroMapper;
     }
 }

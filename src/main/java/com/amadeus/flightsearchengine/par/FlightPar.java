@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,10 +25,10 @@ public class FlightPar
     private String arrivalAirport;
 
     @AerospikeBin(name="depTime")
-    private Long departureDateTime;
+    private LocalDateTime departureDateTime;
 
     @AerospikeBin(name="retTime")
-    private Long returnDateTime;
+    private LocalDateTime returnDateTime;
 
     private Double price;
 }
