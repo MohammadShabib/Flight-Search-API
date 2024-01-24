@@ -27,7 +27,7 @@ public class DatabaseImpl implements DatabaseIf
     public <T> T put(T aInObject)
     {
         aeroMapper.update(aInObject);
-        return null;
+        return aInObject;
     }
 
     @Override

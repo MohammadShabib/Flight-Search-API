@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@AerospikeRecord(namespace="distributionrecords", set="test2")
+@AerospikeRecord(namespace="distributionrecords", set="Airport")
 public class AirportPar
 {
     @AerospikeKey

@@ -7,9 +7,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AirportModel
+public class FlightModel
 {
     private String id;
 
-    private String city;
+    private String departureAirport;
+
+    private String arrivalAirport;
+
+    private Long departureDateTime;
+
+    private Long returnDateTime;
+
+    private Double price;
 }
