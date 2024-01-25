@@ -53,7 +53,6 @@ public class DatabaseImpl implements DatabaseIf
         return aeroMapper.delete(AirportPar.class, aInId);
     }
 
-
     @Override
     public <T> List<T> find(Class<T> aInClass, Function<T, Boolean> aInFunction)
     {

@@ -1,71 +1,61 @@
 package com.amadeus.flightsearchengine.controller;
 
 
-import com.amadeus.flightsearchengine.dao.AirportDao;
-import com.amadeus.flightsearchengine.dao.FlightDao;
-import com.amadeus.flightsearchengine.model.AirportModel;
+import com.amadeus.flightsearchengine.dto.FlightDto;
+import com.amadeus.flightsearchengine.dto.TwoWayFlightDto;
 import com.amadeus.flightsearchengine.model.FlightModel;
 import com.amadeus.flightsearchengine.service.FightSearchService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Validated
 public class FlightController
 {
-    private final AirportDao airportDao;
-
-    private final FlightDao flightDao;
-
     private final FightSearchService fightSearchService;
 
-    public FlightController(AirportDao aInAirportDao, FlightDao aInFlightDao, FightSearchService aInFightSearchService)
+    public FlightController(FightSearchService aInFightSearchService)
     {
-        airportDao = aInAirportDao;
-        flightDao = aInFlightDao;
         fightSearchService = aInFightSearchService;
     }
 
-
-    //https://www.skyscanner.com.tr/transport/flights/esb/ista/240127/240206/
-    @GetMapping("/flights/{departureAirport}/{arrivalAirport}/{departureDateTime}")
-    public ResponseEntity<List<FlightModel>> getOneWayFlight(
-            FlightModel aInFlightModel)
+    //https://www.skyscanner.com.tr/transport/flights/esb/ista/240206/
+    @GetMapping("/flight/{departureAirport}/{arrivalAirport}/{departureDateTime}")
+    public ResponseEntity<List<FlightDto>> getOneWayFlight(@PathVariable String departureAirport,
+            @PathVariable String arrivalAirport,
+            @PathVariable @DateTimeFormat(pattern = "yyMMdd") LocalDate departureDateTime)
     {
-        return  ResponseEntity.ok(fightSearchService.searchFlights(aInFlightModel, false));
+        FlightModel lFlightModel =
+                new FlightModel(null, departureAirport, arrivalAirport, departureDateTime.atStartOfDay(), null, null);
+        return ResponseEntity.ok(fightSearchService.searchFlightsOneWay(lFlightModel));
     }
 
-    @GetMapping("/flights/{departureAirport}/{arrivalAirport}/{departureDateTime}/{returnDateTime}")
-    public Map<String, Object> getTwoWayFlight(
-            FlightModel aInFlightModel)
+    @GetMapping("/flight/{departureAirport}/{arrivalAirport}/{departureDateTime}/{returnDateTime}")
+    public ResponseEntity<TwoWayFlightDto> getTwoWayFlight(@PathVariable String departureAirport,
+            @PathVariable String arrivalAirport,
+            @PathVariable @DateTimeFormat(pattern = "yyMMdd") LocalDate departureDateTime,
+            @PathVariable @DateTimeFormat(pattern = "yyMMdd") LocalDate returnDateTime)
     {
-        Map<String, Object> response = new HashMap<>();
 
-        return response;
+        FlightModel lFlightModel =
+                new FlightModel(null, departureAirport, arrivalAirport, departureDateTime.atStartOfDay(),
+                        returnDateTime.atStartOfDay(), null);
+        return ResponseEntity.ok(fightSearchService.searchFlightsTwoWay(lFlightModel));
     }
 
     @PostMapping("/flight/add")
-    public ResponseEntity<String> test(@Valid @RequestBody List<FlightModel> aInRequest)
+    public ResponseEntity<List<FlightModel>> addFlights(@Valid @RequestBody List<FlightModel> aInRequest)
     {
-        String lAirportId = "06";
-        AirportModel lAirportModel = new AirportModel(lAirportId, "Ankara");
-        airportDao.create(lAirportModel);
-        airportDao.readById(lAirportId);
-        lAirportModel.setCity("Istanbul");
-        airportDao.update(lAirportModel);
-        airportDao.delete(lAirportId);
-
-        flightDao.createBulk(aInRequest);
-
-        return ResponseEntity.ok("File exists.");
+        return ResponseEntity.ok(fightSearchService.addFlights(aInRequest));
     }
 }

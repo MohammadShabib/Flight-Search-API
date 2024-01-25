@@ -17,14 +17,10 @@ public class DBConfig
     {
         try
         {
-            System.out.println("Connected to Aerospike...");
             return new AerospikeClient(aInDbUrl, aInPort);
-
         }
         catch (AerospikeException aInE)
         {
-            System.out.println(aInE);
-            System.out.println("ERROR!! CAN NOT CONNECT TO THE DATABASE");
             throw aInE;
         }
     }

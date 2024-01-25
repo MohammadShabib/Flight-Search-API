@@ -1,5 +1,6 @@
 package com.amadeus.flightsearchengine.dao;
 
+import com.amadeus.flightsearchengine.dto.FlightDto;
 import com.amadeus.flightsearchengine.model.FlightModel;
 
 import java.util.List;
@@ -16,6 +17,5 @@ public interface FlightDao
 
     boolean delete(String aInName);
 
-
-    List<FlightModel> find(FlightModel aInFlightModel);
+    List<FlightModel> find(FlightDto aInFlightDto);
 }

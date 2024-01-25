@@ -18,8 +18,8 @@ public interface DatabaseIf
     /**
      * Performs a batch persist on a list of DB entities of the same type.<br/>
      *
-     * @param aInObjects            the objects to persist
-     * @param <T>                   should be a database type (Par)
+     * @param aInObjects the objects to persist
+     * @param <T>        should be a database type (Par)
      * @return the IDs of the failed records
      */
     <T> List<T> persist(List<T> aInObjects);
@@ -55,5 +55,11 @@ public interface DatabaseIf
      */
     <T> boolean delete(Class<T> aInClass, Object aInId);
 
+    /**
+     * @param aInClass    the object's class
+     * @param aInFunction The Criteria Function
+     * @param <T>         the object's type
+     * @return List of objects that meets the given criteria
+     */
     <T> List<T> find(Class<T> aInClass, Function<T, Boolean> aInFunction);
 }
