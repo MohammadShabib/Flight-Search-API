@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@AerospikeRecord(namespace="distributionrecords", set="Flight")
+@AerospikeRecord(namespace="aerospike_cloud", set="Flight")
 public class FlightPar
 {
     @AerospikeKey
