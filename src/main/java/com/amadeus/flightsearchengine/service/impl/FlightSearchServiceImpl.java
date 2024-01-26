@@ -66,4 +66,28 @@ public class FlightSearchServiceImpl implements FightSearchService
     {
         return flightDao.createBulk(aInFlightModelList);
     }
+
+    @Override
+    public FlightModel updateFlight(FlightModel aInFlightModel)
+    {
+        return flightDao.update(aInFlightModel);
+    }
+
+    @Override
+    public List<FlightModel> getAllFlights()
+    {
+        return flightDao.readAll();
+    }
+
+    @Override
+    public FlightModel getFlightById(String aInFlightId)
+    {
+        return flightDao.readById(aInFlightId);
+    }
+
+    @Override
+    public boolean deleteFlightById(String aInFlightId)
+    {
+        return flightDao.delete(aInFlightId);
+    }
 }

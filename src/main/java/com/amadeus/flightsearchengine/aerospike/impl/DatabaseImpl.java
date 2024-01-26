@@ -2,7 +2,6 @@ package com.amadeus.flightsearchengine.aerospike.impl;
 
 
 import com.aerospike.mapper.tools.AeroMapper;
-import com.amadeus.flightsearchengine.par.AirportPar;
 import com.amadeus.flightsearchengine.aerospike.DatabaseIf;
 import org.springframework.stereotype.Service;
 
@@ -48,9 +47,15 @@ public class DatabaseImpl implements DatabaseIf
     }
 
     @Override
+    public <T> List<T> fetchAll(Class<T> aInClass)
+    {
+       return aeroMapper.scan(aInClass);
+    }
+
+    @Override
     public <T> boolean delete(Class<T> aInClass, Object aInId)
     {
-        return aeroMapper.delete(AirportPar.class, aInId);
+        return aeroMapper.delete(aInClass, aInId);
     }
 
     @Override

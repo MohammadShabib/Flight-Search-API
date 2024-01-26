@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @param <I> the type of the Primary Key
  */
 @Repository
-public abstract class  EntityDAO<M, P, I>
+public abstract class EntityDAO<M, P, I>
 {
     @Autowired
     protected DatabaseIf database;
@@ -46,8 +46,7 @@ public abstract class  EntityDAO<M, P, I>
      */
     protected List<P> bulkConvertToPar(List<M> aInModels)
     {
-        return aInModels.stream().map(this::convertToPar)
-                .collect(Collectors.toList());
+        return aInModels.stream().map(this::convertToPar).collect(Collectors.toList());
     }
 
     /**
@@ -58,8 +57,7 @@ public abstract class  EntityDAO<M, P, I>
      */
     protected List<M> bulkConvertToModel(List<P> aInPars)
     {
-        return aInPars.stream().map(this::convertToModel)
-                .collect(Collectors.toList());
+        return aInPars.stream().map(this::convertToModel).collect(Collectors.toList());
     }
 
     public M create(M aInModel)
@@ -93,9 +91,13 @@ public abstract class  EntityDAO<M, P, I>
     {
         P lPar = database.fetch(getParClass(), aInId);
 
-        return lPar == null
-                ? null
-                : convertToModel(lPar);
+        return lPar == null ? null : convertToModel(lPar);
+    }
+
+    public List<M> readAll()
+    {
+        List<P> lParList = database.fetchAll(getParClass());
+        return bulkConvertToModel(lParList);
     }
 
     public boolean delete(I aInId)

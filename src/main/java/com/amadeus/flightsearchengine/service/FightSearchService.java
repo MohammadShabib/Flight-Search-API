@@ -13,4 +13,12 @@ public interface FightSearchService
     TwoWayFlightDto searchFlightsTwoWay(FlightModel aInFlightModel);
 
     List<FlightModel> addFlights(List<FlightModel> aInFlightModelList);
+
+    FlightModel updateFlight(FlightModel aInFlightModel);
+
+    List<FlightModel> getAllFlights();
+
+    FlightModel getFlightById(String aInFlightId);
+
+    boolean deleteFlightById(String aInFlightId);
 }

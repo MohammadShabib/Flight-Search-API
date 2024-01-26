@@ -15,6 +15,8 @@ public interface FlightDao
 
     FlightModel readById(String aInName);
 
+    List<FlightModel> readAll();
+
     boolean delete(String aInName);
 
     List<FlightModel> find(FlightDto aInFlightDto);

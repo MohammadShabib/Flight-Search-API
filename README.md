@@ -63,7 +63,7 @@ To access the API documentation, follow these steps:
 1. **Run the Application**: Ensure that the application is running on your local machine or deployment server.
 
 2. **Access Swagger UI**: Open a web browser and navigate to the Swagger UI using the following URL pattern:
-   http://[server]:[port]/[context-path]/swagger-ui/index.html
+   http://localhost:8080/swagger-ui/index.html
 
 ![Amadeus Database Search OneWay](https://github.com/MohammadShabib/Flight-Search-API-/assets/72793336/481f0174-e7fc-48e0-a693-570c8bbdccc1)
 ![JWT Authentication png](https://github.com/MohammadShabib/Flight-Search-API-/assets/72793336/86e5ce96-6631-4d1d-93e9-bdfb25e5043d)

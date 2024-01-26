@@ -8,7 +8,6 @@ import com.amadeus.flightsearchengine.model.FlightModel;
 import com.amadeus.flightsearchengine.service.FightSearchService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +18,6 @@ import java.util.List;
 
 @RestController
 @Validated
-@Tag(name = "Flights", description = "Operations related to flights")
 public class FlightControllerImpl implements FlightController
 {
     private final FightSearchService fightSearchService;
@@ -30,20 +28,25 @@ public class FlightControllerImpl implements FlightController
     }
 
     @Override
-    public ResponseEntity<List<FlightDto>> getOneWayFlight(String departureAirport, String arrivalAirport,
+    public ResponseEntity<List<FlightDto>> getOneWayFlight(String departureAirport,
+            String arrivalAirport,
             LocalDate departureDateTime, boolean aInThirdPartySearch)
     {
         FlightModel lFlightModel =
-                new FlightModel(null, departureAirport, arrivalAirport, departureDateTime.atStartOfDay(), null, null);
-        return ResponseEntity.ok(fightSearchService.searchFlightsOneWay(lFlightModel, aInThirdPartySearch));
+                new FlightModel(null, departureAirport, arrivalAirport,
+                        departureDateTime.atStartOfDay(), null, null);
+        return ResponseEntity.ok(
+                fightSearchService.searchFlightsOneWay(lFlightModel, aInThirdPartySearch));
     }
 
     @Override
-    public ResponseEntity<TwoWayFlightDto> getTwoWayFlight(String departureAirport, String arrivalAirport,
+    public ResponseEntity<TwoWayFlightDto> getTwoWayFlight(String departureAirport,
+            String arrivalAirport,
             LocalDate departureDateTime, LocalDate returnDateTime)
     {
         FlightModel lFlightModel =
-                new FlightModel(null, departureAirport, arrivalAirport, departureDateTime.atStartOfDay(),
+                new FlightModel(null, departureAirport, arrivalAirport,
+                        departureDateTime.atStartOfDay(),
                         returnDateTime.atStartOfDay(), null);
         return ResponseEntity.ok(fightSearchService.searchFlightsTwoWay(lFlightModel));
     }
@@ -53,5 +56,29 @@ public class FlightControllerImpl implements FlightController
             @Parameter(description = "List of flights to be added") @Valid @RequestBody List<FlightModel> aInRequest)
     {
         return ResponseEntity.ok(fightSearchService.addFlights(aInRequest));
+    }
+
+    @Override
+    public ResponseEntity<FlightModel> updateFlight(FlightModel aInRequest)
+    {
+        return ResponseEntity.ok(fightSearchService.updateFlight(aInRequest));
+    }
+
+    @Override
+    public ResponseEntity<List<FlightModel>> getAllFlights()
+    {
+        return ResponseEntity.ok(fightSearchService.getAllFlights());
+    }
+
+    @Override
+    public ResponseEntity<FlightModel> getFlightById(String aInFlightId)
+    {
+        return ResponseEntity.ok(fightSearchService.getFlightById(aInFlightId));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> deleteFlightById(String aInFlightId)
+    {
+        return ResponseEntity.ok(fightSearchService.deleteFlightById(aInFlightId));
     }
 }

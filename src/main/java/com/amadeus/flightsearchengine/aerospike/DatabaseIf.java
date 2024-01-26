@@ -47,6 +47,14 @@ public interface DatabaseIf
     <T> T fetch(Class<T> aInClass, Object aInId);
 
     /**
+     * Fetches All Object of a given Entity from DM.
+     *
+     * @param aInClass the object's class
+     * @return List of all objects
+     */
+    <T> List<T> fetchAll(Class<T> aInClass);
+
+    /**
      * Removes an object from the DB.
      *
      * @param aInClass the object's class
