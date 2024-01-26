@@ -1,15 +1,19 @@
 package com.amadeus.flightsearchengine.resttemplatecalls;
 
 import com.amadeus.flightsearchengine.dto.FlightDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,13 +31,19 @@ import java.util.List;
 public class AmadeusApiService
 {
     private final RestTemplate restTemplate;
+    private final String amadeusClientId;
 
-    private final String authToken;
+    private final String amadeusClientSercret;
 
-    public AmadeusApiService(RestTemplate aInRestTemplate, @Value("${security.bearerToken}") String aInAuthToken)
+
+    public AmadeusApiService(RestTemplate aInRestTemplate,
+            @Value("${security.amadeus.clientId}") String aInAmadeusClientId,
+            @Value("${security.amadeus.clientSecret}") String aInAmadeusClientSercret)
     {
         restTemplate = aInRestTemplate;
-        authToken = aInAuthToken;
+
+        amadeusClientId = aInAmadeusClientId;
+        amadeusClientSercret = aInAmadeusClientSercret;
     }
 
     /**
@@ -45,31 +55,70 @@ public class AmadeusApiService
      */
     public List<FlightDto> getFlightOffers(FlightDto aInFlightDto, int aInMaxFlights)
     {
-        String lDepartedDate = aInFlightDto.getDepartureDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        UriComponentsBuilder builder =
-                UriComponentsBuilder.fromUriString("https://test.api.amadeus.com/v2/shopping/flight-offers")
-                        .queryParam("originLocationCode", aInFlightDto.getDepartureAirport())
-                        .queryParam("destinationLocationCode", aInFlightDto.getArrivalAirport())
-                        .queryParam("departureDate", lDepartedDate).queryParam("adults", 1).queryParam("nonStop", true)
-                        .queryParam("max", aInMaxFlights);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(authToken);
-
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
-        ResponseEntity<String> response =
-                restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
         try
         {
+            String lDepartedDate =
+                    aInFlightDto.getDepartureDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE);
+            UriComponentsBuilder builder =
+                    UriComponentsBuilder.fromUriString(
+                                    "https://test.api.amadeus.com/v2/shopping/flight-offers")
+                            .queryParam("originLocationCode", aInFlightDto.getDepartureAirport())
+                            .queryParam("destinationLocationCode", aInFlightDto.getArrivalAirport())
+                            .queryParam("departureDate", lDepartedDate).queryParam("adults", 1)
+                            .queryParam("nonStop", true)
+                            .queryParam("max", aInMaxFlights);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(getToken());
+
+            HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+            ResponseEntity<String> response =
+                    restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+                            String.class);
+
+
             return extractFlightDto(response.getBody());
         }
-        catch (IOException aInE)
+        catch (Exception aInE)
         {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Get Bearer token for Amadeus authentication
+     *
+     * @return Bearer token
+     * @throws JsonProcessingException
+     */
+    private String getToken() throws JsonProcessingException
+    {
+        String lOutAccessToken = null;
+        MultiValueMap<String, String> lMultiValueMap = new LinkedMultiValueMap<>();
+        lMultiValueMap.add("grant_type", "client_credentials");
+        lMultiValueMap.add("client_id", amadeusClientId);
+        lMultiValueMap.add("client_secret", amadeusClientSercret);
+
+        HttpEntity<MultiValueMap<String, String>> lAuthRequest =
+                new HttpEntity<>(lMultiValueMap, new HttpHeaders());
+
+        ResponseEntity<String> lAuthResponse = restTemplate.postForEntity(
+                "https://test.api.amadeus.com/v1/security/oauth2/token", lAuthRequest,
+                String.class);
+        if (lAuthResponse.getStatusCode() == HttpStatus.OK)
+        {
+            String lAuthResponseBody = lAuthResponse.getBody();
+            ObjectMapper lObjectMapper = new ObjectMapper();
+
+
+            JsonNode lJsonNode = lObjectMapper.readTree(lAuthResponseBody);
+            lOutAccessToken = lJsonNode.path("access_token").asText();
+        }
+
+        return lOutAccessToken;
     }
 
     /**
@@ -93,12 +142,15 @@ public class AmadeusApiService
             lFlightDto.setId(lData.path("id").asText());
 
             JsonNode lSegmentNode = lData.path("itineraries").get(0).path("segments").get(0);
-            lFlightDto.setDepartureAirport(lSegmentNode.path("departure").path("iataCode").asText());
+            lFlightDto.setDepartureAirport(
+                    lSegmentNode.path("departure").path("iataCode").asText());
             lFlightDto.setArrivalAirport(lSegmentNode.path("arrival").path("iataCode").asText());
 
-            DateTimeFormatter lDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            DateTimeFormatter lDateTimeFormatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
             lFlightDto.setDepartureDateTime(
-                    LocalDateTime.parse(lSegmentNode.path("departure").path("at").asText(), lDateTimeFormatter));
+                    LocalDateTime.parse(lSegmentNode.path("departure").path("at").asText(),
+                            lDateTimeFormatter));
 
             lFlightDto.setPrice(lData.path("price").path("total").asDouble());
 
