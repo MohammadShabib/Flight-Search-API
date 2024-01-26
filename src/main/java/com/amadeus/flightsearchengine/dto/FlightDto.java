@@ -24,6 +24,12 @@ public class FlightDto
 
     private Double price;
 
+    /**
+     * maps {@link FlightModel} to {@link FlightDto} based on the provided aInFlightDto
+     * @param aInFlightDto flight which will be the referencing for mapping
+     * @param aInFlightModel flight to be mapped
+     * @return mapped {@link FlightDto
+     */
     public static FlightDto convertModelToDTO(FlightDto aInFlightDto, FlightModel aInFlightModel)
     {
         FlightDto lFlightDto = new FlightDto();
@@ -51,6 +57,7 @@ public class FlightDto
         return lFlightDto;
     }
 
+
     public static List<FlightDto> convertBulkModelToDTO(FlightDto aInFlightDto, List<FlightModel> aInFlightModel)
     {
         return aInFlightModel.stream()
@@ -58,6 +65,12 @@ public class FlightDto
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Converts {@link FlightModel} to {@link FlightDto}
+     * @param aInFlightModel     the flight to be converted
+     * @param aInIsDepartureTime if true take the departure flight, if it false takes the return flight
+     * @return converted {@link FlightDto}
+     */
     public static FlightDto convertModelToDTO(FlightModel aInFlightModel, boolean aInIsDepartureTime)
     {
         FlightDto lFlightDto = new FlightDto();
@@ -76,5 +89,28 @@ public class FlightDto
             lFlightDto.setDepartureDateTime(aInFlightModel.getReturnDateTime());
         }
         return lFlightDto;
+    }
+
+    /**
+     * Converts {@link FlightDto} to {@link FlightModel}
+     *
+     * @param aInFlightDto Flight to be converted
+     * @return {@link FlightModel}
+     */
+    public FlightModel convertDtoToModel()
+    {
+       FlightModel lOutFlightModel = new FlightModel();
+        lOutFlightModel.setId(id);
+        lOutFlightModel.setDepartureAirport(departureAirport);
+        lOutFlightModel.setArrivalAirport(arrivalAirport);
+        lOutFlightModel.setDepartureDateTime(departureDateTime);
+
+        //Assume Return Date is after 1 day
+        LocalDateTime lReturnDateTime  = departureDateTime.plusDays(1);
+        lOutFlightModel.setReturnDateTime(lReturnDateTime);
+
+        lOutFlightModel.setPrice(price);
+
+        return lOutFlightModel;
     }
 }

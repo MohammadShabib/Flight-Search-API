@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FightSearchService
 {
-    List<FlightDto> searchFlightsOneWay(FlightModel aInFlightModel);
+    List<FlightDto> searchFlightsOneWay(FlightModel aInFlightModel, boolean aInThirdPartySearch);
 
     TwoWayFlightDto searchFlightsTwoWay(FlightModel aInFlightModel);
 

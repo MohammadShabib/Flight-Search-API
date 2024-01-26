@@ -4,6 +4,7 @@ import com.amadeus.flightsearchengine.dao.FlightDao;
 import com.amadeus.flightsearchengine.dto.FlightDto;
 import com.amadeus.flightsearchengine.dto.TwoWayFlightDto;
 import com.amadeus.flightsearchengine.model.FlightModel;
+import com.amadeus.flightsearchengine.resttemplatecalls.AmadeusApiService;
 import com.amadeus.flightsearchengine.service.FightSearchService;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +18,29 @@ import static com.amadeus.flightsearchengine.dto.FlightDto.convertModelToDTO;
 public class FlightSearchServiceImpl implements FightSearchService
 {
     private final FlightDao flightDao;
+    private final AmadeusApiService amadeusApiService;
 
-    public FlightSearchServiceImpl(FlightDao aInFlightDao)
+    public FlightSearchServiceImpl(FlightDao aInFlightDao, AmadeusApiService aInAmadeusApiService)
     {
         flightDao = aInFlightDao;
+        amadeusApiService = aInAmadeusApiService;
     }
 
     @Override
-    public List<FlightDto> searchFlightsOneWay(FlightModel aInFlightModel)
+    public List<FlightDto> searchFlightsOneWay(FlightModel aInFlightModel, boolean aInThirdPartySearch)
     {
-        FlightDto lFlightDto = convertModelToDTO(aInFlightModel, true);
-        List<FlightModel> lDepartureFlights =  flightDao.find(lFlightDto);
-        List<FlightDto> lOutFlightDto = new ArrayList<>(convertBulkModelToDTO(lFlightDto, lDepartureFlights));
+        List<FlightDto> lOutFlightDto = null;
+        FlightDto lRequestedFlightDto = convertModelToDTO(aInFlightModel, true);
+
+        if (aInThirdPartySearch)
+        {
+            lOutFlightDto = amadeusApiService.getFlightOffers(lRequestedFlightDto, 5);
+        }
+        else
+        {
+            List<FlightModel> lDepartureFlights = flightDao.find(lRequestedFlightDto);
+            lOutFlightDto = new ArrayList<>(convertBulkModelToDTO(lRequestedFlightDto, lDepartureFlights));
+        }
 
         return lOutFlightDto;
     }

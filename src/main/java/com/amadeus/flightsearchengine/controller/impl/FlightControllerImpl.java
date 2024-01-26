@@ -31,11 +31,11 @@ public class FlightControllerImpl implements FlightController
 
     @Override
     public ResponseEntity<List<FlightDto>> getOneWayFlight(String departureAirport, String arrivalAirport,
-            LocalDate departureDateTime)
+            LocalDate departureDateTime, boolean aInThirdPartySearch)
     {
         FlightModel lFlightModel =
                 new FlightModel(null, departureAirport, arrivalAirport, departureDateTime.atStartOfDay(), null, null);
-        return ResponseEntity.ok(fightSearchService.searchFlightsOneWay(lFlightModel));
+        return ResponseEntity.ok(fightSearchService.searchFlightsOneWay(lFlightModel, aInThirdPartySearch));
     }
 
     @Override

@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class DBConfig
 {
     @Bean(destroyMethod = "close")
-    public AerospikeClient asClient(@Value("${AEROSPIKE_URL}") String aInDbUrl,
-            @Value("${AEROSPIKE_PORT}") Integer aInPort) throws AerospikeException
+    public AerospikeClient asClient(@Value("${aerospike.url}") String aInDbUrl,
+            @Value("${aerospike.port}") Integer aInPort) throws AerospikeException
     {
         try
         {
