@@ -67,8 +67,8 @@ public interface FlightController
                     "[\n" + "    {\n" + "        \"id\": \"1\",\n" +
                             "        \"departureAirport\": \"SAW\",\n" +
                             "        \"arrivalAirport\": \"IST\",\n" +
-                            "        \"departureDateTime\": \"2024-02-25:15:30\",\n" +
-                            "        \"returnDateTime\": \"2024-02-26:15:30\",\n" +
+                            "        \"departureDateTime\": \"2024-02-15T15:30\",\n" +
+                            "        \"returnDateTime\": \"2024-02-16T15:30\",\n" +
                             "        \"price\": \"30\"\n" +
                             "    }\n" + "]"))), responses = {
             @ApiResponse(description = "List of added flights", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FlightModel.class)))})

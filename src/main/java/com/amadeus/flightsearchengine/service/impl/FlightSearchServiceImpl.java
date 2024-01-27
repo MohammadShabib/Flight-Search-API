@@ -35,6 +35,9 @@ public class FlightSearchServiceImpl implements FightSearchService
         if (aInThirdPartySearch)
         {
             lOutFlightDto = amadeusApiService.getFlightOffers(lRequestedFlightDto, 5);
+            List<FlightModel> lFlightModelList =
+                    lOutFlightDto.stream().map(FlightDto::convertDtoToModel).toList();
+            flightDao.createBulk(lFlightModelList);
         }
         else
         {

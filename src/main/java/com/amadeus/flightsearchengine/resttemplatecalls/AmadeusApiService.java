@@ -12,12 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.DigestUtils;
+    import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -139,8 +141,6 @@ public class AmadeusApiService
         {
             FlightDto lFlightDto = new FlightDto();
 
-            lFlightDto.setId(lData.path("id").asText());
-
             JsonNode lSegmentNode = lData.path("itineraries").get(0).path("segments").get(0);
             lFlightDto.setDepartureAirport(
                     lSegmentNode.path("departure").path("iataCode").asText());
@@ -154,10 +154,24 @@ public class AmadeusApiService
 
             lFlightDto.setPrice(lData.path("price").path("total").asDouble());
 
+            lFlightDto.setId(generateUUID(lFlightDto));
+
             lOutFlightDtoList.add(lFlightDto);
         }
 
         return lOutFlightDtoList;
+    }
+
+    /**
+     * Generate Flight ID based on departure, arrival, and departure time.
+     *
+     * @param aInFlightDto Flight
+     * @return Flight Id
+     */
+    private static String generateUUID(FlightDto aInFlightDto)
+    {
+        String lUniqueString = aInFlightDto.getDepartureAirport() + aInFlightDto.getArrivalAirport() + aInFlightDto.getDepartureDateTime();
+        return DigestUtils.md5DigestAsHex(lUniqueString.getBytes(StandardCharsets.UTF_8));
     }
 }
 

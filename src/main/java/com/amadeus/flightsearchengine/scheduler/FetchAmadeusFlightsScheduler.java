@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Scheduler that is responsible for fetching flights from 3rd party APIs
@@ -21,7 +20,8 @@ public class FetchAmadeusFlightsScheduler
 
     private final FlightDao flightDao;
 
-    public FetchAmadeusFlightsScheduler(AmadeusApiService aInAmadeusApiService, FlightDao aInFlightDao)
+    public FetchAmadeusFlightsScheduler(AmadeusApiService aInAmadeusApiService,
+            FlightDao aInFlightDao)
     {
         amadeusApiService = aInAmadeusApiService;
         flightDao = aInFlightDao;
@@ -35,11 +35,8 @@ public class FetchAmadeusFlightsScheduler
         lFlightDto.setArrivalAirport("SAW");
         lFlightDto.setDepartureDateTime(LocalDate.now().atStartOfDay());
         List<FlightDto> lFlightDtoList = amadeusApiService.getFlightOffers(lFlightDto, 2);
-        List<FlightModel> lFlightModelList = lFlightDtoList.stream().map(lFlight -> {
-            //TODO Make the ID depends on the 3 fields
-            lFlight.setId(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 5));
-            return lFlight.convertDtoToModel();
-        }).toList();
+        List<FlightModel> lFlightModelList =
+                lFlightDtoList.stream().map(FlightDto::convertDtoToModel).toList();
         flightDao.createBulk(lFlightModelList);
     }
 }
