@@ -40,9 +40,9 @@ public class SecurityConfig
     public OpenApiCustomizer openApiCustomizer()
     {
         return openApi -> {
-            openApi.components(new Components().addSecuritySchemes("bearerAuth",
+            openApi.getComponents().addSecuritySchemes("bearerAuth",
                     new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer")
-                            .bearerFormat("JWT")));
+                            .bearerFormat("JWT"));
         };
     }
 }
