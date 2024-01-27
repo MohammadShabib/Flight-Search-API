@@ -1,0 +1,382 @@
+{
+	"info": {
+		"_postman_id": "6cef1a20-1624-410e-aa01-fd5a634c21ca",
+		"name": "Amadeus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14819095",
+		"_collection_link": "https://restless-shadow-167048.postman.co/workspace/CGF~55164169-c8d5-4e38-9fd1-6f1c94c51215/collection/14819095-6cef1a20-1624-410e-aa01-fd5a634c21ca?action=share&source=collection_link&creator=14819095"
+	},
+	"item": [
+		{
+			"name": "JWT",
+			"item": [
+				{
+					"name": "JWT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.text();\r",
+									"pm.globals.set(\"JWT\", jsonData);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/jwt",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"jwt"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flights",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Flights",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"id\": \"1\",\n        \"departureAirport\": \"ESB\",\n        \"arrivalAirport\": \"SAW\",\n        \"departureDateTime\": \"2024-02-15T15:30:30\",\n        \"returnDateTime\": \"2024-02-16T15:30\",\n        \"price\": \"30\"\n    },\n    {\n        \"id\": \"2\",\n        \"departureAirport\": \"ESB\",\n        \"arrivalAirport\": \"SAW\",\n        \"departureDateTime\": \"2024-02-16T16:45\",\n        \"returnDateTime\": \"2024-02-17T16:45\",\n        \"price\": \"40\"\n    },\n    {\n        \"id\": \"3\",\n        \"departureAirport\": \"SAW\",\n        \"arrivalAirport\": \"ESB\",\n        \"departureDateTime\": \"2024-02-25T18:00\",\n        \"returnDateTime\": \"2024-02-16T18:00\",\n        \"price\": \"50\"\n    },\n    {\n        \"id\": \"4\",\n        \"departureAirport\": \"SAW\",\n        \"arrivalAirport\": \"ESB\",\n        \"departureDateTime\": \"2024-02-16T10:45\",\n        \"returnDateTime\": \"2024-02-16T15:45\",\n        \"price\": \"500\"\n    },\n    {\n        \"id\": \"5\",\n        \"departureAirport\": \"ESB\",\n        \"arrivalAirport\": \"SAW\",\n        \"departureDateTime\": \"2024-02-15T10:45\",\n        \"returnDateTime\": \"2024-02-19T15:45\",\n        \"price\": \"500\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/flight",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Flights",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flight/all",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flight by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flight?id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flight by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flight?id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flight",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"1\",\n    \"departureAirport\": \"ESB\",\n    \"arrivalAirport\": \"SAW\",\n    \"departureDateTime\": \"2024-02-15T15:30:30\",\n    \"returnDateTime\": \"2024-02-16T15:30\",\n    \"price\": \"50\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/flight",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Flights One Way",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flight/ESB/SAW/240215?thirdPartySearch=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight",
+										"ESB",
+										"SAW",
+										"240215"
+									],
+									"query": [
+										{
+											"key": "thirdPartySearch",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flights Two Way",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flight/ESB/SAW/2024-02-15/2024-02-16",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flight",
+										"ESB",
+										"SAW",
+										"2024-02-15",
+										"2024-02-16"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "amesdus",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.5"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 9qAFh9auq4CCb87hEeZNAzl6l0rV"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.amadeus+json"
+					},
+					{
+						"key": "Origin",
+						"value": "https://developers.amadeus.com"
+					},
+					{
+						"key": "Referer",
+						"value": "https://developers.amadeus.com/"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-site"
+					},
+					{
+						"key": "Sec-GPC",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Not A(Brand\";v=\"99\", \"Brave\";v=\"121\", \"Chromium\";v=\"121\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Linux\""
+					}
+				],
+				"url": {
+					"raw": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=ESB&destinationLocationCode=IST&departureDate=2024-05-02&adults=1&nonStop=true&max=2",
+					"protocol": "https",
+					"host": [
+						"test",
+						"api",
+						"amadeus",
+						"com"
+					],
+					"path": [
+						"v2",
+						"shopping",
+						"flight-offers"
+					],
+					"query": [
+						{
+							"key": "originLocationCode",
+							"value": "ESB"
+						},
+						{
+							"key": "destinationLocationCode",
+							"value": "IST"
+						},
+						{
+							"key": "departureDate",
+							"value": "2024-05-02"
+						},
+						{
+							"key": "adults",
+							"value": "1"
+						},
+						{
+							"key": "nonStop",
+							"value": "true"
+						},
+						{
+							"key": "max",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{JWT}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var jsonData = pm.response.text();",
+					"pm.collectionVariables.set(\"authToken\", jsonData);"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		}
+	]
+}

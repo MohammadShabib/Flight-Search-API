@@ -9,7 +9,6 @@
 6. [To Do](#to-do)
 
 ## Summary
-
 This application provides a comprehensive API for various flight-related operations. It is designed to cater to both one-way and round-trip flight searches, along with the capability to add multiple flights to the database in bulk. A notable feature of this application is its integration with the Amadeus Database, allowing it to fetch real-time information about flights.
 
 ### Key Features
@@ -47,12 +46,31 @@ To set up and run the application, follow these steps:
     security.amadeus.clientId=ozH5U6xhACfGKJkF4n31xM2nKpATnrHt
     security.amadeus.clientSecret=sbzRL3i6A60why05
     ```
+   #### Important Note:
+   
+   - The configuration values provided above are for demonstration purposes and can be invalid after sometime and btw they are not linked to personal accounts :D.
+
 
 3. **Build and Run the Application**: Proceed with building and running the application
 
-### Important Note:
+4. **Explore and Test the APIs**:
 
-- The configuration values provided above are for demonstration purposes and can be invalid after sometime and btw they are not linked to personal accounts :D.
+   **a. Using Swagger**:
+
+   You can use Swagger to try out the APIs. To do so, follow these steps:
+
+   1. Obtain a JWT token by making a GET request to `{{base_url}}/jwt`.
+
+   2. Use the obtained token to authenticate your requests while testing the APIs in Swagger.
+
+   **b. Using Postman Collection**:
+
+   Alternatively, you can use the provided Postman collection for convenience. Here's how:
+
+   1. Import the [Amadeus.postman_collection.json](src%2Fmain%2Fresources%2FAmadeus.postman_collection.json) file into Postman.
+
+   2. Trigger the GET JWT API. It is autoconfigured to generate and add the JWT token for the entire collection after successful execution.
+   3. Interact with the APIs :D
 
 ### API Documentation
 
