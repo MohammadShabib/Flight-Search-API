@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +34,7 @@ import java.util.List;
 @Validated
 @Tag(name = "Flights", description = "Operations related to flights")
 @RequestMapping(value = "flight", produces = MediaType.APPLICATION_JSON_VALUE)
+@SecurityRequirement(name = "bearerAuth")
 public interface FlightController
 {
     //https://www.skyscanner.com.tr/transport/flights/esb/ista/240206/
@@ -65,25 +67,36 @@ public interface FlightController
                     "[\n" + "    {\n" + "        \"id\": \"1\",\n" +
                             "        \"departureAirport\": \"SAW\",\n" +
                             "        \"arrivalAirport\": \"IST\",\n" +
-                            "        \"departureDateTime\": \"2024-02-25:30\",\n" +
-                            "        \"returnDateTime\": \"2024-02-26:30\",\n" +
+                            "        \"departureDateTime\": \"2024-02-25:15:30\",\n" +
+                            "        \"returnDateTime\": \"2024-02-26:15:30\",\n" +
                             "        \"price\": \"30\"\n" +
                             "    }\n" + "]"))), responses = {
             @ApiResponse(description = "List of added flights", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FlightModel.class)))})
     @PostMapping("")
     ResponseEntity<List<FlightModel>> addFlights(
             @Parameter(description = "List of flights to be added", required = true) @Valid @RequestBody List<FlightModel> aInRequest);
+
     @PutMapping("")
+    @Operation(summary = "Update a flight", description = "Update the details of a flight based on the provided FlightModel", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = "application/json", schema = @Schema(implementation = FlightModel.class), examples = @ExampleObject(value =
+            "{\n" + "    \"id\": \"1\",\n" +
+                    "    \"departureAirport\": \"ESB\",\n" +
+                    "    \"arrivalAirport\": \"SAW\",\n" +
+                    "    \"departureDateTime\": \"2024-02-15T15:30:30\",\n" +
+                    "    \"returnDateTime\": \"2024-02-16T15:30\",\n" +
+                    "    \"price\": \"50\"\n" +
+                    "}"))))
     ResponseEntity<FlightModel> updateFlight(
             @Parameter(description = "Flight to be updated", required = true) @Valid @RequestBody FlightModel aInRequest);
 
     @GetMapping("/all")
+    @Operation(summary = "Get all flights", description = "Retrieve a list of all flights available")
     ResponseEntity<List<FlightModel>> getAllFlights();
 
-
     @GetMapping("")
-    ResponseEntity<FlightModel> getFlightById(@RequestParam(name = "id") String aInFlightId);
+    @Operation(summary = "Get a flight by ID", description = "Retrieve details of a flight based on the provided flight ID")
+    ResponseEntity<FlightModel> getFlightById( @Parameter(description = "Flight Id", example = "1") @RequestParam(name = "id") String aInFlightId);
 
     @DeleteMapping("")
-    ResponseEntity<Boolean> deleteFlightById(@RequestParam(name = "id") String aInFlightId);
+    @Operation(summary = "Delete a flight by ID", description = "Delete a flight based on the provided flight ID")
+    ResponseEntity<Boolean> deleteFlightById( @Parameter(description = "Flight Id", example = "1") @RequestParam(name = "id") String aInFlightId);
 }

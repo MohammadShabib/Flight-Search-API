@@ -73,13 +73,21 @@ To access the API documentation, follow these steps:
 ### To Do
 
 
-1. **Implement CRUD APIs for Flight and Airport Objects**:
-    - Develop and integrate APIs to perform Create, Read, Update, and Delete (CRUD) operations for both Flight and Airport objects.
+1. **Implement CRUD APIs for the Airport Object**:
+    - Develop and integrate APIs to perform Create, Read, Update, and Delete (CRUD) operations for the Airport object.
     - Ensure these APIs are connected with the corresponding CRUD operations on the database, allowing for seamless data management.
 
 2. **Enable Logging**:
     - Implement logging throughout the application to capture critical information, errors, and operational data.
 
 3. **Exception Handling and Failure Management**   
+
 4. **Add JUnit Tests**
+
+5. **Enhance Authentication Mechanism Using JWT**:
+   - Replace the current dummy token generation method with a more secure and standard approach that verifies user credentials before issuing a token.
+
+   - Implement an in-memory check for user credentials, including username and password, to enhance authentication processes.
+
+
    
